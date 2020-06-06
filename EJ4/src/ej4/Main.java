@@ -7,10 +7,6 @@ public class Main{
         Clase c = new Clase();
         c.setSize(320,400);
         c.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        c.setVisible(true);
-        // String s="0000";
-        // DecimalFormat a = new DecimalFormat("0."+s);
-        // System.out.println(a.format(4.13421342345));
-        
+        c.setVisible(true);      
     }
 }
