@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
@@ -21,10 +22,10 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
     private JButton btnoperacion = new JButton("Calcular");
     private ButtonGroup operaciones = new ButtonGroup();
     private JComboBox<String> decimal = new JComboBox<String>();
-    private DecimalFormat formatter;
     private String operacion = "";
     private int x = 30, y = 60;
     private File file = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"guardado.txt");
+    private int decimales;
 
     public Clase() {
         super("EJ4");
@@ -90,18 +91,13 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
 
         decimal.setSize(decimal.getPreferredSize());
         decimal.setLocation(65, 150);
-        decimal.addItem("0");
-        decimal.addItem("1");
-        decimal.addItem("2");
-        decimal.addItem("3");
-        decimal.addItem("4");
-        decimal.addItem("5");
+        for(int i = 0; i < 6;i++){
+            this.decimal.addItem(String.valueOf(i));
+        }
         decimal.setSize(decimal.getPreferredSize());
         decimal.setSelectedIndex(0);
         decimal.addItemListener(this);
         this.add(decimal);
-
-        formatter = new DecimalFormat("0");
 
         this.addWindowListener(new WindowHandler(this));
 
@@ -110,8 +106,25 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
                 this.txa.setText(sc.nextLine());
                 this.txa2.setText(sc.nextLine());
                 this.lbloperacion.setText(sc.nextLine());
-            } catch (Exception e) {
+                switch(this.lbloperacion.getText()){
+                    case "+":
+                        this.suma.setSelected(true);
+                        break;
 
+                    case "-":
+                        this.resta.setSelected(true);
+                        break;
+
+                    case "*":
+                        this.multiplicacion.setSelected(true);
+                        break;
+
+                    case "/":
+                        this.division.setSelected(true);
+                        break;
+                }
+            } catch (FileNotFoundException e) {
+               
             }
         }
     }
@@ -139,14 +152,7 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
             operacion = "/";
 
         } else {
-            String s = "";
-            for(int i = 0;i < Integer.parseInt(this.decimal.getSelectedItem().toString()) && Integer.parseInt(this.decimal.getSelectedItem().toString()) != 0;i++){
-                s+="0";
-            }
-            formatter = new DecimalFormat("0." + s);
-            if(Integer.parseInt(this.decimal.getSelectedItem().toString()) == 0){
-                formatter = new DecimalFormat("0");
-            }
+            decimales = Integer.parseInt(this.decimal.getSelectedItem().toString());
         }
 
     }
@@ -166,19 +172,19 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
             }else{
                 switch (operacion) {
                     case "+":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ formatter.format(Double.parseDouble(this.txa.getText()) + Double.parseDouble(this.txa2.getText())));
+                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) + Double.parseDouble(this.txa2.getText()))));
                         this.lbligual.setSize(lbligual.getPreferredSize());
                         break;
                     case "-":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ formatter.format(Double.parseDouble(this.txa.getText()) - Double.parseDouble(this.txa2.getText())));
+                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) - Double.parseDouble(this.txa2.getText()))));
                         this.lbligual.setSize(lbligual.getPreferredSize());
                         break;
                     case "*":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ formatter.format(Double.parseDouble(this.txa.getText()) * Double.parseDouble(this.txa2.getText())));
+                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) * Double.parseDouble(this.txa2.getText()))));
                         this.lbligual.setSize(lbligual.getPreferredSize());
                         break;
                     case "/":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ formatter.format(Double.parseDouble(this.txa.getText()) / Double.parseDouble(this.txa2.getText())));
+                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) / Double.parseDouble(this.txa2.getText()))));
                         this.lbligual.setSize(lbligual.getPreferredSize());
                         break;
                     default:
@@ -186,6 +192,8 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
                 }
             }
         } catch (IllegalArgumentException e) {
+            System.out.println("Mensaje: "+e.getMessage());
+            System.out.println("Causa: "+e.getCause());
             JOptionPane.showMessageDialog(this, "No se han introducido números válidos.");
         }
     }
