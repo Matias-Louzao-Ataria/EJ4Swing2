@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Clase extends JFrame implements ItemListener, ActionListener {
@@ -164,36 +163,33 @@ public class Clase extends JFrame implements ItemListener, ActionListener {
         lblerror.setSize(lblerror.getPreferredSize());
         this.lbligual.setText("=");
         try {
-            if(Integer.parseInt(this.txa2.getText()) == 0 && this.operacion == "/"){
-                lblerror.setText("División entre 0");
-                lblerror.setForeground(Color.red);
-                lblerror.setSize(lblerror.getPreferredSize());
-                JOptionPane.showMessageDialog(this,"Selecciona un número que no sea cero para dividir");
-            }else{
-                switch (operacion) {
-                    case "+":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) + Double.parseDouble(this.txa2.getText()))));
-                        this.lbligual.setSize(lbligual.getPreferredSize());
-                        break;
-                    case "-":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) - Double.parseDouble(this.txa2.getText()))));
-                        this.lbligual.setSize(lbligual.getPreferredSize());
-                        break;
-                    case "*":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) * Double.parseDouble(this.txa2.getText()))));
-                        this.lbligual.setSize(lbligual.getPreferredSize());
-                        break;
-                    case "/":
-                        this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",(Double.parseDouble(this.txa.getText()) / Double.parseDouble(this.txa2.getText()))));
-                        this.lbligual.setSize(lbligual.getPreferredSize());
-                        break;
-                    default:
-                        break;
+            double res = 0;
+            switch (operacion) {
+                case "+":
+                    res = Double.parseDouble(this.txa.getText()) + Double.parseDouble(this.txa2.getText());
+                    break;
+                case "-":
+                    res = Double.parseDouble(this.txa.getText()) - Double.parseDouble(this.txa2.getText());
+                    break;
+                case "*":
+                    res = Double.parseDouble(this.txa.getText()) * Double.parseDouble(this.txa2.getText());
+                    break;
+                case "/":
+                    res = Double.parseDouble(this.txa.getText()) / Double.parseDouble(this.txa2.getText());
+                    break;
+                default:
+                    break;
                 }
-            }
+                if(Double.isNaN(res) || Double.isInfinite(res)){
+                    lblerror.setText("Operación no válida!");
+                    lblerror.setForeground(Color.red);
+                    lblerror.setSize(lblerror.getPreferredSize());
+                    JOptionPane.showMessageDialog(this,"Introduce una operación valida a realizar.");
+                }else{
+                    this.lbligual.setText(this.lbligual.getText() + " "+ String.format("%"+"."+this.decimales+"f",res));
+                    this.lbligual.setSize(lbligual.getPreferredSize());
+                }
         } catch (IllegalArgumentException e) {
-            System.out.println("Mensaje: "+e.getMessage());
-            System.out.println("Causa: "+e.getCause());
             JOptionPane.showMessageDialog(this, "No se han introducido números válidos.");
         }
     }
